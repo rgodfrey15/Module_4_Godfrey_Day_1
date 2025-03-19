@@ -93,8 +93,67 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + #much more effiecent
   geom_point() + 
   geom_smooth()
-#way to much 
+#way to much code 
 ggplot() + 
   geom_point(data = mpg, mapping = aes(x = displ, y = hwy)) + 
   geom_smooth(data = mpg, mapping = aes(x = displ, y = hwy))
 ```
+
+
+#Plotting stats
+```{r}
+#must load packages before running
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut))
+
+ggplot(data = diamonds) + 
+  stat_count(mapping = aes(x = cut))
+
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = stat(prop), group = 1))
+
+#stat summary
+ggplot(data = diamonds) + 
+  stat_summary(
+    mapping = aes(x = cut, y = depth),
+    fun.min = min,
+    fun.max = max,
+    fun = median
+  )
+
+```
+#Aesthetic Adjustments
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, colour = cut))#color outside bars
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = cut))#color inside bars 
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity))#multiple colors in bar
+
+ggplot(data = diamonds, mapping = aes(x = cut, fill = clarity)) + 
+  geom_bar(alpha = 1/5, position = "identity") #gradient of clarity
+
+ggplot(data = diamonds, mapping = aes(x = cut, colour = clarity)) + 
+  geom_bar(fill = NA, position = "identity") #no fill
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity), position = "fill") #I dont like this one
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity), position = "dodge")#overlappings
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), position = "jitter")# shows points even if in spot
+```
+#the outline of coding aethetics 
+```{r}
+#ggplot(data = <DATA>) + 
+ # <GEOM_FUNCTION>(
+    # mapping = aes(<MAPPINGS>),
+   #  stat = <STAT>, 
+   #  position = <POSITION>
+ # ) +
+ # <FACET_FUNCTION>
+```
+
