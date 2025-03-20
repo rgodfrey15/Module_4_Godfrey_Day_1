@@ -367,5 +367,67 @@ theme (panel.border = element_blank(),
 
 ```
 
-#
+#3.8 Saving and eporting your plots
+```{r}
+ggplot(mpg, aes(displ, hwy)) + geom_point()
+
+ggsave("my-plot.pdf")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+#3.10 Assignment with Q Fish
+```{r}
+library(readxl)
+QFISH_Otter_Data <- read_excel("~/Downloads/QFISH_Otter_Data.xlsx")
+View(QFISH_Otter_Data)
+
+```
+
+
+#Cleaning R Data with tidyverse
+```{r}
+QFISH_Otter_Data<- QFISH_Otter_Data %>% slice(-n())
+View(QFISH_Otter_Data)
+
+```
+
+#Making the Plot
+```{r}
+#final assignment 1
+library(ggplot2)
+QFISH_Otter_Data$CalendarYear<-as.numeric(QFISH_Otter_Data$CalendarYear)
+QFISH_Otter_Data$Days<-as.numeric(QFISH_Otter_Data$Days)
+QFISH_Otter_Data$Tonnes<-as.numeric(QFISH_Otter_Data$Tonnes)
+ggplot(data = QFISH_Otter_Data) +
+  geom_point(aes(x = CalendarYear, y = Days, color = "Days", shape = "Days")) +  # Fixed y mapping
+  geom_point(aes(x = CalendarYear, y = Tonnes, color = "Tonnes", shape = "Tonnes")) + # Fixed shape duplication
+  geom_smooth(aes(x = CalendarYear, y = Days, color = "Days"), method = "loess") +
+  geom_smooth(aes(x = CalendarYear, y = Tonnes, color = "Tonnes"), method = "loess") +
+  labs(y = "Days and Tonnes", x = "CalendarYear", color = "Amount", shape = "Amount") +
+  scale_color_manual(values = c("Days" = "red", "Tonnes" = "black")) +  # Ensuring colors are correct
+  scale_shape_manual(values = c("Days" = 16, "Tonnes" = 17))  # Custom shape mapping
+
+```
+
+
+
+
+```{r}
+#final assignment 1
+ggplot(data=JA_File)+
+  geom_point(aes(x=Year, y= "Days", color= "Days", shape= "Days")) + 
+  geom_point(aes(x=Year, y= Australia, color= "Tonnes", shape="Tonnes", shape="Tonnes")) +
+  geom_smooth(aes(x=Year, y= Japan, color= "Days"), method="loess")+
+  geom_smooth(aes(x=Year,y=Australia,color="Tonnes"),method="loess")+
+  labs(y= "Days and Tonnes", x="Year", color= "Amount", shape= "Amount")
 ```
