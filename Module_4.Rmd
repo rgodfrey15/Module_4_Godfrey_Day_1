@@ -156,4 +156,39 @@ ggplot(data = mpg) +
  # ) +
  # <FACET_FUNCTION>
 ```
+#Day 2 Assignment 1
+```{r}
+library(readxl)
+API_ER_FSH_AQUA_MT_DS2_en_excel_v2_967 <- read_excel("~/Downloads/API_ER.FSH.AQUA.MT_DS2_en_excel_v2_967.xls", 
+    sheet = "Sheet2")
+View(API_ER_FSH_AQUA_MT_DS2_en_excel_v2_967) #copied from import
+JA_File=API_ER_FSH_AQUA_MT_DS2_en_excel_v2_967 #renaming file
+```
 
+#Alter the plot
+```{r}
+JA_File$Year<- as.numeric(JA_File$Year) #need to define numeric not just label as numeric
+JA_File <- na.omit (JA_File)
+str(JA_File$Year)
+ggplot(data= JA_File) +
+ geom_point(
+   mapping = aes(x= Year, y=Japan), color="grey" ) +
+ geom_point(
+   mapping = aes(x= Year, y=Australia), color="black" ) +
+  geom_smooth(
+    mapping=aes(x=Year, y= Japan), color="grey") +
+ geom_smooth(
+   mapping=aes(x=Year, y= Japan), group=1, color="grey") +
+ geom_smooth(
+    mapping= aes(x=Year, y= Australia ), group=2, color= "black")+
+  labs(y="Aquaculture Production (Metric Tons)",x="Year", color= "Country")
+
+```
+```{r}
+ggplot(data=JA_File)+
+  geom_point(aes(x=Year, y= Japan, color= "Japan", shape= "Japan")) + 
+  geom_point(aes(x=Year, y= Australia, color= "Australia", shape="Australia", shape="Australia")) +
+  geom_smooth(aes(x=Year, y= Japan, color= "Japan"), method="loess")+
+  geom_smooth(aes(x=Year,y=Australia,color="Australia"),method="loess")+
+  labs(y= "Fish Catch (Metric Tons)", x="Year", color= "Country", shape= "Country")
+```
