@@ -184,11 +184,188 @@ ggplot(data= JA_File) +
   labs(y="Aquaculture Production (Metric Tons)",x="Year", color= "Country")
 
 ```
-```{r}
+```{r} 
+#final assignment 1
 ggplot(data=JA_File)+
   geom_point(aes(x=Year, y= Japan, color= "Japan", shape= "Japan")) + 
   geom_point(aes(x=Year, y= Australia, color= "Australia", shape="Australia", shape="Australia")) +
   geom_smooth(aes(x=Year, y= Japan, color= "Japan"), method="loess")+
   geom_smooth(aes(x=Year,y=Australia,color="Australia"),method="loess")+
   labs(y= "Fish Catch (Metric Tons)", x="Year", color= "Country", shape= "Country")
+```
+# 3.1 Labels
+```{r}
+# Adding a title in GG plot 
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) + #se.e is the error in the code
+  labs(title = "Fuel efficiency generally decreases with engine size")
+
+#subtitle and captions
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color =class)) +
+  geom_smooth(se = FALSE) +
+  labs(
+    title = "Fuel efficiency generally decreases with engine size",
+    subtitle = "Two seaters (sports cars) are an exception because of their light weight",
+    caption = "Data from fueleconomy.gov"
+  )
+#using labs 
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  labs(
+    x = "Engine displacement (L)",
+    y = "Highway fuel economy (mpg)",
+    color = "Car type"
+  )
+
+```
+
+#3.2
+```{r}
+#library(dplyr) # Loads dplyr, which includes %>%
+
+best_in_class <- mpg %>%
+  group_by(class) %>%
+  filter(row_number(desc(hwy)) == 1)
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class)) +
+  geom_text(aes(label = model), data = best_in_class)
+
+```
+
+#3.3
+
+```{r}
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class)) #default scales
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class)) +
+  scale_x_continuous() +#must state 
+  scale_y_continuous() +#mistake was misspelliing
+  scale_colour_discrete()
+
+```
+#3.4 Axis Ticks
+```{r}
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point() +
+  scale_y_continuous(breaks = seq(15, 40, by = 5)) #between 15 and 40 ticks every five
+
+#setting null so no values
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point() +
+  scale_x_continuous(labels = NULL) +
+  scale_y_continuous(labels = NULL)
+
+```
+
+
+#3.5 Legend and Color Scheme 
+```{r}
+base <- ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class))
+
+base + theme(legend.position = "left")
+base + theme(legend.position = "top")
+base + theme(legend.position = "bottom") #dislike this 
+base + theme(legend.position = "right") # the default
+```
+
+#3.6 Replacing a Scale
+```{r}
+ggplot(diamonds, aes(carat, price)) +
+  geom_bin2d() + #not a typo bin2d is real
+  scale_x_log10() + 
+  scale_y_log10() #quite an intersting graph very blocky
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = drv))
+
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = drv)) +
+  scale_colour_brewer(palette = "Set1") #set on red green blue
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = drv, shape = drv)) +
+  scale_colour_brewer(palette = "Set1") #changes shape and color 
+
+
+scale_colour_manual() #prechoosing colors 
+presidential %>%
+  mutate(id = 33 + row_number()) %>%
+  ggplot(aes(start, id, colour = party)) +
+    geom_point() +
+    geom_segment(aes(xend = end, yend = id)) +
+    scale_colour_manual(values = c(Republican = "red", Democratic = "blue")) #lolz
+
+##install.packages('viridis')
+##install.packages('hexbin')
+##library(viridis)
+##library(hexbin)
+
+df <- tibble( # note we're just making a fake dataset so we can plot it
+  x = rnorm(10000),
+  y = rnorm(10000)
+)
+ggplot(df, aes(x, y)) +
+  geom_hex() + # a new geom!
+  coord_fixed() #blues
+
+ggplot(df, aes(x, y)) + #colors
+  geom_hex() +
+  viridis::scale_fill_viridis() +
+  coord_fixed()
+
+
+```
+
+
+#3.7 Themes
+```{r}
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme_bw() #texts and lines black and white
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme_light() #all grey or lights
+
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme_classic() #no grid
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme_dark() # i hate it but shows contrast well
+
+
+theme (panel.border = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        legend.position="bottom",
+        legend.title=element_blank(),
+        legend.text=element_text(size=8),
+        panel.grid.major = element_blank(),
+        legend.key = element_blank(),
+        legend.background = element_blank(),
+        axis.text.y=element_text(colour="black"),
+        axis.text.x=element_text(colour="black"),
+        text=element_text(family="Arial"))
+# This is now my theme 
+
+
+```
+
+#
 ```
